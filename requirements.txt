@@ -2,5 +2,6 @@ Flask==2.0.2
 requests==2.26.0
 pyttsx3==2.90
 python-socketio
+playsound
 openai==0.10.5  # Only if you are using OpenAI API
 Werkzeug==2.2.2
