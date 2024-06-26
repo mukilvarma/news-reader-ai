@@ -31,7 +31,7 @@ def fetch_news_headlines(location, country='us'):
 def summarize_article(article_text):
     try:
         response = openai.Completion.create(
-            model="text-davinci-003",
+            model="gpt-3.5-turbo",
             prompt=f"Summarize the following article:\n\n{article_text}",
             max_tokens=150
         )
