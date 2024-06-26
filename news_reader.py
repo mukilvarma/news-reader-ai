@@ -1,8 +1,7 @@
-
 import openai
 import pyttsx3
 import requests
-from newsapi import NewsApiClient
+from pygooglenews import GoogleNews
 
 # Set your API keys
 NEWS_API_KEY = 'cbd680a5fef9440a8a2f136569e5be7f'
