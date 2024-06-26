@@ -2,6 +2,7 @@ from flask import Flask, jsonify, render_template
 import requests
 import openai
 from playsound import playsound
+import socket
 
 app = Flask(__name__)
 # Set your News API key and OpenAI API key
@@ -11,9 +12,15 @@ OPENAI_API_KEY = 'sk-news-reader-xbCP8fEaxFoHfli78bpPT3BlbkFJgFsImfIKqMgd8Suzqfr
 # Set OpenAI API key
 openai.api_key = OPENAI_API_KEY
 
+def get_ip_address():
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname)
+    return ip_address
+    
 def get_location():
     try:
-        response = requests.get('https://ipinfo.io')
+        IPAddr = get_ip_address()
+        response = requests.get('ipinfo.io/IPAddr?token=d8b62a31ff33cb')
         if response.status_code == 200:
             data = response.json()
             return data.get('city'), data.get('region'), data.get('country')
