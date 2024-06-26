@@ -1,13 +1,10 @@
 import openai
 import pyttsx3
 import requests
-from pygooglenews import GoogleNews
+import feedparser
 
-# Set your API keys
-NEWS_API_KEY = 'cbd680a5fef9440a8a2f136569e5be7f'
+# Set your OpenAI API key
 OPENAI_API_KEY = 'sk-news-reader-xbCP8fEaxFoHfli78bpPT3BlbkFJgFsImfIKqMgd8SuzqfrJ'
-
-# Initialize the clients
 openai.api_key = OPENAI_API_KEY
 
 def get_location():
@@ -24,9 +21,9 @@ def get_location():
 
 def fetch_news_headlines(location, country='us'):
     try:
-        search_query = f"{location} news"
-        news_data = googlenews.search(search_query)
-        return news_data
+        feed_url = f"https://news.google.com/rss/search?q={location}+news&hl={country}&gl={country}&ceid={country}:en"
+        news_feed = feedparser.parse(feed_url)
+        return news_feed.entries
     except Exception as e:
         print(f"Error fetching news: {e}")
         return None
@@ -50,15 +47,16 @@ def text_to_speech(text):
 
 def read_news(location):
     print("Fetching news headlines...")
-    news_data = fetch_news_headlines(location)
-    if news_data:
-        articles = news_data['entries']
+    articles = fetch_news_headlines(location)
+    if articles:
         for article in articles:
             title = article['title']
             summary = article.get('summary', '')
+            full_text = f"{summary}"
+            summarized_text = summarize_article(full_text)
             print(f"Title: {title}")
-            print(f"Summary: {summary}")
-            text_to_speech(summary)
+            print(f"Summary: {summarized_text}")
+            text_to_speech(summarized_text)
     else:
         print("Failed to fetch news headlines.")
 
