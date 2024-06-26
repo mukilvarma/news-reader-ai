@@ -1,13 +1,14 @@
-import requests
 import openai
 import pyttsx3
-import os
+import requests
+from newsapi import NewsApiClient
 
-# Set your News API key and OpenAI API key
+# Set your API keys
 NEWS_API_KEY = 'cbd680a5fef9440a8a2f136569e5be7f'
 OPENAI_API_KEY = 'sk-news-reader-xbCP8fEaxFoHfli78bpPT3BlbkFJgFsImfIKqMgd8SuzqfrJ'
 
-# Set OpenAI API key
+# Initialize the clients
+newsapi = NewsApiClient(api_key=NEWS_API_KEY)
 openai.api_key = OPENAI_API_KEY
 
 def get_location():
@@ -22,18 +23,11 @@ def get_location():
         print(f"Error fetching location: {e}")
         return None, None, None
 
-def fetch_news_headlines(location, country):
+def fetch_news_headlines(location, country='us'):
     try:
-        url = 'https://newsapi.org/v2/top-headlines'
-        params = {
-            'apiKey': NEWS_API_KEY,
-            'country': country,
-            'q': location
-        }
-        response = requests.get(url, params=params)
-        response.raise_for_status()  # Raise an exception for HTTP errors (4xx or 5xx)
-        return response.json()
-    except requests.exceptions.RequestException as e:
+        news_data = newsapi.get_top_headlines(q=location, country=country)
+        return news_data
+    except Exception as e:
         print(f"Error fetching news: {e}")
         return None
 
@@ -54,10 +48,10 @@ def text_to_speech(text):
     engine.say(text)
     engine.runAndWait()
 
-def read_news(location, country):
+def read_news(location):
     print("Fetching news headlines...")
-    news_data = fetch_news_headlines(location, country)
-    if news_data:
+    news_data = fetch_news_headlines(location)
+    if news_data and news_data['status'] == 'ok':
         articles = news_data.get('articles', [])
         for article in articles:
             title = article['title']
@@ -75,7 +69,7 @@ if __name__ == '__main__':
     city, state, country = get_location()
     if city:
         print(f"Fetching news headlines for {city}, {state}, {country}...")
-        read_news(city, country)
+        read_news(city)
     else:
         print("Unable to determine location. Fetching global news headlines...")
-        read_news('world', 'world')
+        read_news('world')
