@@ -22,7 +22,7 @@ def get_location():
         print(f"Error fetching location: {e}")
         return None, None, None
 
-def fetch_news_headlines(location, country='us'):
+def fetch_news_headlines(location, country):
     try:
         url = 'https://newsapi.org/v2/top-headlines'
         params = {
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     city, state, country = get_location()
     if city:
         print(f"Fetching news headlines for {city}, {state}, {country}...")
-        read_news(city)
+        read_news(city, country)
     else:
         print("Unable to determine location. Fetching global news headlines...")
         read_news('world')
