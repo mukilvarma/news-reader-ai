@@ -36,7 +36,7 @@ def summarize_article(article_text):
             max_tokens=150
         )
         return response.choices[0].text.strip()
-    except openai.Error as e:
+    except openai.error.OpenAIError as e:
         print(f"OpenAI API error: {e}")
         return "Failed to summarize article."
 
