@@ -26,8 +26,8 @@ def get_location():
 def fetch_news_headlines(location, country):
     try:
         news_data = newsapi.get_top_headlines(q=location, country=country)
-            print("Fetching news_data...")
-            print(news_data)
+        print("Fetching news_data...")
+        print(news_data)
         return news_data
     except Exception as e:
         print(f"Error fetching news: {e}")
