@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template
 import requests
 import openai
-from playsound import playsound
+import playsound
 import socket
 
 app = Flask(__name__)
