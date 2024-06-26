@@ -1,0 +1,30 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News Reader</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>News Reader</h1>
+    <button id="playNewsBtn">Play News</button>
+
+    <script>
+        $(document).ready(function() {
+            $('#playNewsBtn').click(function() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/play_news',
+                    success: function(response) {
+                        alert(response.message);
+                    },
+                    error: function(error) {
+                        alert('Error playing news: ' + error.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
