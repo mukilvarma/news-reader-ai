@@ -23,9 +23,11 @@ def get_location():
         print(f"Error fetching location: {e}")
         return None, None, None
 
-def fetch_news_headlines(location, country='us'):
+def fetch_news_headlines(location, country):
     try:
         news_data = newsapi.get_top_headlines(q=location, country=country)
+            print("Fetching news_data...")
+            print(news_data)
         return news_data
     except Exception as e:
         print(f"Error fetching news: {e}")
@@ -48,9 +50,9 @@ def text_to_speech(text):
     engine.say(text)
     engine.runAndWait()
 
-def read_news(location):
+def read_news(location, country):
     print("Fetching news headlines...")
-    news_data = fetch_news_headlines(location)
+    news_data = fetch_news_headlines(location, country)
     if news_data and news_data['status'] == 'ok':
         articles = news_data.get('articles', [])
         for article in articles:
@@ -69,7 +71,7 @@ if __name__ == '__main__':
     city, state, country = get_location()
     if city:
         print(f"Fetching news headlines for {city}, {state}, {country}...")
-        read_news(city)
+        read_news(city, country)
     else:
         print("Unable to determine location. Fetching global news headlines...")
-        read_news('world')
+        read_news('world', 'world')
