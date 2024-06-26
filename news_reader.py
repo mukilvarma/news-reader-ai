@@ -8,7 +8,6 @@ NEWS_API_KEY = 'cbd680a5fef9440a8a2f136569e5be7f'
 OPENAI_API_KEY = 'sk-news-reader-xbCP8fEaxFoHfli78bpPT3BlbkFJgFsImfIKqMgd8SuzqfrJ'
 
 # Initialize the clients
-newsapi = NewsApiClient(api_key=NEWS_API_KEY)
 openai.api_key = OPENAI_API_KEY
 
 def get_location():
