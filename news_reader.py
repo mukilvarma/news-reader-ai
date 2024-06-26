@@ -78,4 +78,4 @@ if __name__ == '__main__':
         read_news(city, country)
     else:
         print("Unable to determine location. Fetching global news headlines...")
-        read_news('world')
+        read_news('world', 'world')
