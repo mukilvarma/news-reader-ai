@@ -54,9 +54,9 @@ def text_to_speech(text):
     engine.say(text)
     engine.runAndWait()
 
-def read_news(location):
+def read_news(location, country):
     print("Fetching news headlines...")
-    news_data = fetch_news_headlines(location)
+    news_data = fetch_news_headlines(location, country)
     if news_data:
         articles = news_data.get('articles', [])
         for article in articles:
