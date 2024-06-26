@@ -1,1 +1,1 @@
-web: bundle exec rails server -p $PORT
+web: python news_reader.py
