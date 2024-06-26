@@ -29,6 +29,8 @@ def fetch_news_headlines(location, country='us'):
         return None
 
 def summarize_article(article_text):
+    print("Fetching article_text...")
+    print(article_text)
     try:
         response = openai.Completion.create(
             model="gpt-3.5-turbo",
@@ -38,7 +40,7 @@ def summarize_article(article_text):
         return response.choices[0].text.strip()
     except openai.error.OpenAIError as e:
         print(f"OpenAI API error: {e}")
-        return "Failed to summarize article."
+        return article_text
 
 def text_to_speech(text):
     engine = pyttsx3.init()
