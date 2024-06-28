@@ -1,9 +1,12 @@
+from flask import Flask, request, jsonify
 import openai
 from gtts import gTTS
 import requests
 import feedparser
 from playsound import playsound
 import os
+
+app = Flask(__name__)
 
 # Set your OpenAI API key
 OPENAI_API_KEY = 'sk-news-reader-xbCP8fEaxFoHfli78bpPT3BlbkFJgFsImfIKqMgd8SuzqfrJ'
@@ -63,11 +66,16 @@ def read_news(location):
     else:
         print("Failed to fetch news headlines.")
 
-if __name__ == '__main__':
+@app.route('/')
+def index():
     city, state, country = get_location()
     if city:
         print(f"Fetching news headlines for {city}, {state}, {country}...")
         read_news(city)
+        return f"News headlines for {city}, {state}, {country} have been read."
     else:
-        print("Unable to determine location. Fetching global news headlines...")
         read_news('world')
+        return "Unable to determine location. Fetching global news headlines..."
+
+if __name__ == '__main__':
+    app.run(debug=True)
