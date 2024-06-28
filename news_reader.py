@@ -8,6 +8,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 import pygame
 import io
+import time
 
 
 app = Flask(__name__, template_folder='templates')
@@ -15,6 +16,9 @@ app = Flask(__name__, template_folder='templates')
 # Set your News API key and OpenAI API key
 NEWS_API_KEY = 'cbd680a5fef9440a8a2f136569e5be7f'
 OPENAI_API_KEY = 'sk-news-service-NLlhQ6ULVybEEZ7Nj8EuT3BlbkFJZsvRJci1foO7h0GSy3jU'
+
+# Cache for storing generated audio data
+audio_cache = {}
 
 # Set OpenAI API key
 openai.api_key = OPENAI_API_KEY
@@ -95,12 +99,11 @@ def text_to_speech(text):
     # Initialize gTTS with the text and language (English is 'en')
     tts = gTTS(text=text, lang='en')
 
-    # Convert the gTTS object to an in-memory file-like object
-    fp = io.BytesIO()
-    tts.write_to_fp(fp)
-    fp.seek(0)
-
-    return fp
+    # Create a temporary file to store the audio
+    with io.BytesIO() as fp:
+        tts.write_to_fp(fp)
+        fp.seek(0)
+        return fp.read()
 
 def text_to_speechs(text):
     # Initialize gTTS with the text and language (English is 'en')
@@ -120,6 +123,20 @@ def text_to_speechs(text):
     while pygame.mixer.music.get_busy():
         pygame.time.Clock().tick(10)
 
+def generate_audio(text):
+    # Check if audio for the text is already cached
+    if text in audio_cache:
+        return audio_cache[text]
+    
+    # Generate new audio
+    tts = gTTS(text=text, lang='en')
+    with io.BytesIO() as fp:
+        tts.write_to_fp(fp)
+        fp.seek(0)
+        audio_data = fp.read()
+        audio_cache[text] = audio_data  # Cache the audio data
+        return audio_data        
+
 @app.route('/')
 def index():
     template_path = os.path.join(app.template_folder, 'index.html')
@@ -136,29 +153,24 @@ def play_news():
 
     if news_data:
         articles = news_data.get('articles', [])
-        audio_files = []
-        for article in articles:
-            title = article['title']
-            #url = article['url']
-            description = article.get('description', '')
-            content = article.get('content', '')
-            full_text = f"{description}"
-            if len(full_text.split()) > 5:
-                summary = summarize_article(full_text)
-                if summary:
-                    audio_data = text_to_speech(summary).read()
-                    audio_files.append(audio_data)
-
-            def generate_audio():
-                for audio_data in audio_files:
-                    yield audio_data
-
-            # Stream audio files in a loop
-            return Response(generate_audio(), mimetype='audio/mpeg')
         
-        return jsonify({'message': 'News playback initiated'})
-    else:
-        return jsonify({'error': 'Failed to fetch news headlines'})
+        # Generator function to yield audio data for each article
+        def generate_audio_stream():
+            for article in articles:
+                title = article['title']
+                description = article.get('description', '')
+                content = article.get('content', '')
+                full_text = f"{description} {content}"
+                if len(full_text.split()) > 5:
+                    summary = summarize_article(full_text)
+                    if summary:
+                        yield generate_audio(summary)
+                        time.sleep(2)
+
+        # Stream audio files in sequence
+        return Response(generate_audio_stream(), mimetype='audio/mpeg')
+
+    return jsonify({'error': 'Failed to fetch news headlines'})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
