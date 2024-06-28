@@ -58,7 +58,7 @@
         <script>
             const audioPlayer = document.getElementById('audioPlayer');
             audioPlayer.addEventListener('ended', function() {
-                // Reload the audio source to loop
+                // Reload the audio source to play the next audio file
                 audioPlayer.load();
                 audioPlayer.play();
             });
@@ -66,7 +66,7 @@
         <!--button id="playNewsBtn">Play News</button-->
     </div>
 
-    <script>
+    <!--script>
         $(document).ready(function() {
             $('#playNewsBtn').click(function() {
                 $.ajax({
@@ -81,6 +81,6 @@
                 });
             });
         });
-    </script>
+    </script-->
 </body>
 </html>
