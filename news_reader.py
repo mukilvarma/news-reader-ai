@@ -1,7 +1,9 @@
 import openai
-import pyttsx3
+from gtts import gTTS
 import requests
 import feedparser
+from playsound import playsound
+import os
 
 # Set your OpenAI API key
 OPENAI_API_KEY = 'sk-news-reader-xbCP8fEaxFoHfli78bpPT3BlbkFJgFsImfIKqMgd8SuzqfrJ'
@@ -29,8 +31,6 @@ def fetch_news_headlines(location, country='us'):
         return None
 
 def summarize_article(article_text):
-    print("Fetching article_text...")
-    print(article_text)
     try:
         response = openai.Completion.create(
             model="gpt-3.5-turbo",
@@ -40,12 +40,13 @@ def summarize_article(article_text):
         return response.choices[0].text.strip()
     except openai.error.OpenAIError as e:
         print(f"OpenAI API error: {e}")
-        return article_text
+        return "Failed to summarize article."
 
 def text_to_speech(text):
-    engine = pyttsx3.init()
-    engine.say(text)
-    engine.runAndWait()
+    tts = gTTS(text=text, lang='en')
+    tts.save('output.mp3')
+    playsound('output.mp3')
+    os.remove('output.mp3')
 
 def read_news(location):
     print("Fetching news headlines...")
