@@ -1,1 +1,1 @@
-web: python news_reader.py
+web: gunicorn news_reader:app
