@@ -1,6 +1,7 @@
 # News Reader Application
 
 The News Reader Application is a Flask-based web application that fetches top headlines from News API, summarizes them using OpenAI's GPT-3 model, and streams audio summaries to the user.
+Play : https://mukil-news-b3123052eeeb.herokuapp.com/
 
 ## Features
 
