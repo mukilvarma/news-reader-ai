@@ -49,8 +49,21 @@
 </head>
 <body>
     <div class="container">
-        <h1>News Reader</h1>
-        <button id="playNewsBtn">Play News</button>
+        <h1>Mukil's AI News Reader</h1>
+        <audio id="audioPlayer" controls autoplay>
+            <source src="/play_news" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    
+        <script>
+            const audioPlayer = document.getElementById('audioPlayer');
+            audioPlayer.addEventListener('ended', function() {
+                // Reload the audio source to loop
+                audioPlayer.load();
+                audioPlayer.play();
+            });
+        </script>
+        <!--button id="playNewsBtn">Play News</button-->
     </div>
 
     <script>
