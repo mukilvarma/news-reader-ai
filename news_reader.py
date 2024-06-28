@@ -9,6 +9,13 @@ import xml.etree.ElementTree as ET
 import pygame
 import io
 
+# Create a dummy audio device
+os.environ['SDL_AUDIODRIVER'] = 'dummy'
+
+# Initialize Pygame
+pygame.init()
+
+
 app = Flask(__name__, template_folder='templates')
 
 # Set your News API key and OpenAI API key
